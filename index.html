@@ -3,12 +3,12 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>💖YÊU EM BÉ💖</title>
+<title>Hiệu ứng trái tim rơi toàn màn hình</title>
 <style>
   html, body {
     margin: 0; padding: 0; overflow: hidden;
     height: 100%;
-    background: linear-gradient(135deg, #c53263, #fa75a4);
+    background: linear-gradient(135deg, #ec6d98, #f5528b);
   }
   canvas {
     display: block;
@@ -22,266 +22,140 @@
 </style>
 </head>
 <body>
-     
-<div id="mobile-overlay" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box; z-index: 10002; color: #fff; font-size: 1.5em; text-align: center;"></div>
-          
-     </div>
-     <script>
-          const overlay = document.getElementById('mobile-overlay');
-          const removeOverlay = () => {
-               overlay.style.transition = 'opacity 0.5s';
-               overlay.style.opacity = '0';
-               setTimeout(() => overlay.remove(), 500);
-          };
-          document.addEventListener('touchstart', removeOverlay, { once: true });
-     </script>
 
-
-<!-- Thêm hiệu ứng 3D sử dụng Three.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<canvas id="hearts"></canvas>
+<div id="fallingTexts"></div>
 <script>
-(function(){
-     // Tạo scene, camera, renderer cho hiệu ứng 3D
-     const scene = new THREE.Scene();
-     const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
-     const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-     renderer.setSize(window.innerWidth, window.innerHeight);
-     renderer.domElement.style.position = 'fixed';
-     renderer.domElement.style.top = 0;
-     renderer.domElement.style.left = 0;
-     renderer.domElement.style.zIndex = 9998;
-     document.body.appendChild(renderer.domElement);
-
-     window.addEventListener('resize', () => {
-          camera.aspect = window.innerWidth / window.innerHeight;
-          camera.updateProjectionMatrix();
-          renderer.setSize(window.innerWidth, window.innerHeight);
+window.addEventListener('load', () => {
+     // Adjust mousemove to produce a stronger 3D effect
+     document.addEventListener('mousemove', (e) => {
+          const xNorm = e.clientX / window.innerWidth - 0.5;
+          const yNorm = e.clientY / window.innerHeight - 0.5;
+          const rotateY = xNorm * 40; // doubled rotation for a stronger effect
+          const rotateX = -yNorm * 40;
+          // Increase perspective and add slight scaling for depth
+          document.body.style.transform = `perspective(1500px) rotateY(${rotateY}deg) rotateX(${rotateX}deg) scale(1.05)`;
      });
 
-     // Hàm tạo hình trái tim theo dạng shape
-     function createHeartShape(){
-          const shape = new THREE.Shape();
-          shape.moveTo( 0, 0 );
-          shape.bezierCurveTo( 0, 0, -2, -2, -4, -2 );
-          shape.bezierCurveTo( -7, -2, -7, 1.5, -7, 1.5 );
-          shape.bezierCurveTo( -7, 4, -4, 6, 0, 8 );
-          shape.bezierCurveTo( 4, 6, 7, 4, 7, 1.5 );
-          shape.bezierCurveTo( 7, 1.5, 7, -2, 4, -2 );
-          shape.bezierCurveTo( 2, -2, 0, 0, 0, 0 );
-          return shape;
-     }
-
-     // Tạo geometry và material cho trái tim 3D
-     const heartShape = createHeartShape();
-     const extrudeSettings = { depth: 2, bevelEnabled: true, bevelThickness: 0.5, bevelSize: 0.5 };
-     const heartGeometry = new THREE.ExtrudeGeometry(heartShape, extrudeSettings);
-     const heartMaterial = new THREE.MeshPhongMaterial({ color: 0xff69b4 });
-
-     // Nhóm các trái tim để dễ quản lý animation
-     const heartsGroup = new THREE.Group();
-     const heartsCount = 30;
-     for(let i=0; i<heartsCount; i++){
-          const heartMesh = new THREE.Mesh(heartGeometry, heartMaterial);
-          heartMesh.position.x = Math.random() * window.innerWidth - window.innerWidth/2;
-          heartMesh.position.y = Math.random() * window.innerHeight - window.innerHeight/2;
-          heartMesh.position.z = Math.random() * -500;
-          heartMesh.rotation.z = Math.random() * Math.PI;
-          heartsGroup.add(heartMesh);
-     }
-     scene.add(heartsGroup);
-
-     // Thêm ánh sáng cho scene
-     const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-     directionalLight.position.set(0, 0, 500);
-     scene.add(directionalLight);
-
-     camera.position.z = 500;
-
-     // Vòng lặp animation cho hiệu ứng 3D
-     function animate3D(){
-          requestAnimationFrame(animate3D);
-          heartsGroup.children.forEach(heart => {
-               heart.rotation.x += 0.01;
-               heart.rotation.y += 0.01;
-               heart.position.y -= 1;
-               if(heart.position.y < -window.innerHeight/2 - 50){
-                    heart.position.y = window.innerHeight/2 + 50;
-               }
-          });
-          renderer.render(scene, camera);
-     }
-     animate3D();
-})();
-</script>
-<script>
-(function(){
-     const textCanvas = document.createElement('canvas');
-     textCanvas.style.position = 'fixed';
-     textCanvas.style.top = 0;
-     textCanvas.style.left = 0;
-     textCanvas.style.width = '100vw';
-     textCanvas.style.height = '100vh';
-     textCanvas.style.pointerEvents = 'none';
-     textCanvas.style.zIndex = 10000;
-     document.body.appendChild(textCanvas);
-     const ctx = textCanvas.getContext('2d');
-
-     let cw = window.innerWidth, ch = window.innerHeight;
-     textCanvas.width = cw;
-     textCanvas.height = ch;
-
-     window.addEventListener('resize', () => {
-          cw = window.innerWidth;
-          ch = window.innerHeight;
-          textCanvas.width = cw;
-          textCanvas.height = ch;
+     document.addEventListener('mouseleave', () => {
+          // Reset transformation when mouse leaves window
+          document.body.style.transform = 'perspective(1500px) rotateY(0deg) rotateX(0deg) scale(1)';
      });
-     ctx.shadowColor = 'rgba(255, 255, 255, 0.8)';
-     ctx.shadowBlur = 20; 
-     const fallingTexts = [];
-     const sampleTexts = ["Chúc em bé 01/06 thật vui vẻ và ý nghĩa", "LOVE", "💖", "Anh yêu em bé nhiều!!💖",];
-     const textsCount = 10; // Số lượng văn bản rơi xuống
-     for (let i = 0; i < textsCount; i++) {
-          fallingTexts.push({
-               text: sampleTexts[Math.floor(Math.random() * sampleTexts.length)],
-               x: Math.random() * cw,
-               y: Math.random() * ch,
-               speed: Math.random() * 1 + 0.5,
-               fontSize: Math.random() * 20 + 30,
-               opacity: Math.random() * 0.5 + 0.5
-          });
-     }
-
-     function animateFallingText(){
-          ctx.clearRect(0, 0, cw, ch);
-          fallingTexts.forEach(item => {
-               ctx.font = item.fontSize + "px Arial";
-               ctx.fillStyle = "rgba(255,255,255," + item.opacity + ")";
-               ctx.fillText(item.text, item.x, item.y);
-               item.y += item.speed;
-               if(item.y > ch){
-                    item.y = -item.fontSize;
-                    item.x = Math.random() * cw;
-               }
-          });
-          requestAnimationFrame(animateFallingText);
-     }
-     animateFallingText();
-})();
+});
 </script>
 
 <script>
-(function(){
-     const imagesCanvas = document.createElement('canvas');
-     imagesCanvas.style.position = 'fixed';
-     imagesCanvas.style.top = 0;
-     imagesCanvas.style.left = 0;
-     imagesCanvas.style.width = '100vw';
-     imagesCanvas.style.height = '100vh';
-     imagesCanvas.style.pointerEvents = 'none';
-     imagesCanvas.style.zIndex = 10001;
-     document.body.appendChild(imagesCanvas);
+(() => {
+     const container = document.getElementById('fallingTexts');
+     const texts = ["Chúc em bé 01/06!!", "Vui vẻ và ý nghĩa", "Love", "Yêu em bé", "💖"];
+     const textElements = [];
+     const count = 20;
+     const viewportWidth = window.innerWidth;
+     for (let i = 0; i < count; i++) {
+          const el = document.createElement('div');
+          el.innerText = texts[Math.floor(Math.random() * texts.length)];
+          el.style.position = 'fixed';
+          el.style.left = Math.random() * viewportWidth + 'px';
+          el.style.top = -50 + 'px';
+          el.style.fontSize = (Math.random() * 20 + 20) + 'px';
+          el.style.color = 'white';
+          el.style.opacity = (Math.random() * 0.7 + 0.3).toString();
+          el.style.pointerEvents = 'none';
+          container.appendChild(el);
+          textElements.push({
+               el: el,
+               x: parseFloat(el.style.left),
+               y: -50,
+               speed: Math.random() * 2 + 1,
+               swing: Math.random() * 10 + 5,
+               swingPhase: Math.random() * Math.PI * 2
+          });
+     }
+     function animateTexts() {
+          const viewportWidth = window.innerWidth;
+          const viewportHeight = window.innerHeight;
+          textElements.forEach(obj => {
+               obj.swingPhase += 0.03;
+               const offsetX = Math.sin(obj.swingPhase) * obj.swing;
+               obj.y += obj.speed;
+               if (obj.y > viewportHeight) {
+                    obj.y = -50;
+                    obj.x = Math.random() * viewportWidth;
+               }
+               obj.el.style.top = obj.y + 'px';
+               obj.el.style.left = (obj.x + offsetX) + 'px';
+          });
+          requestAnimationFrame(animateTexts);
+     }
+     animateTexts();
+})();
+</script>
+<script>
+(() => {
+     // Create a container for falling images
+     const imageContainer = document.createElement('div');
+     document.body.appendChild(imageContainer);
+     imageContainer.style.position = 'fixed';
+     imageContainer.style.top = '0';
+     imageContainer.style.left = '0';
+     imageContainer.style.width = '100%';
+     imageContainer.style.height = '100%'; 
+     imageContainer.style.pointerEvents = 'none';
+     imageContainer.style.overflow = 'hidden';
 
-     const ctx = imagesCanvas.getContext('2d');
-     let cw = window.innerWidth, ch = window.innerHeight;
-     imagesCanvas.width = cw;
-     imagesCanvas.height = ch;
-
-     window.addEventListener('resize', () => {
-           cw = window.innerWidth;
-           ch = window.innerHeight;
-           imagesCanvas.width = cw;
-           imagesCanvas.height = ch;
-     });
-
-     const fallingImages = [];
-     const imagesCount = 5;
-     const imageUrls = [
-          'images/1.jpg',
-          'images/2.jpg',
-          'images/3.jpg',
-          'images/4.jpg',
-          'images/5.jpg',
+     // List of sample image URLs
+     const imageSources = [
+        "images/1.jpg",
+        "images/2.jpg",
+            "images/3.jpg",
      ];
 
-     function random(min, max) {
-           return Math.random() * (max - min) + min;
+     const images = [];
+     const count = 15;
+     const viewportWidth = window.innerWidth;
+     
+     // Create image elements with random properties
+     for (let i = 0; i < count; i++) {
+          const img = document.createElement('img');
+          img.src = imageSources[Math.floor(Math.random() * imageSources.length)];
+          img.style.position = 'fixed';
+          img.style.width = (Math.random() * 30 + 50) + 'px';
+          img.style.height = 'auto';
+          img.style.left = Math.random() * viewportWidth + 'px';
+          img.style.top = -50 + 'px';
+          imageContainer.appendChild(img);
+          images.push({
+               el: img,
+               x: parseFloat(img.style.left),
+               y: -50,
+               speed: Math.random() * 2 + 1,
+               swing: Math.random() * 10 + 5,
+               swingPhase: Math.random() * Math.PI * 2
+          });
      }
-     setTimeout(() => {
-          const prevPush = fallingImages.push;
-          fallingImages.push = function(...items) {
-               // Chỉ thêm ảnh với xác suất 50% và điều chỉnh vị trí tránh chồng lấn
-               if (Math.random() < 0.5) {
-                    const pad = 20; // khoảng cách đệm để tránh đè lên nhau
-                    items = items.map(item => {
-                         let attempt = 0;
-                         // Kiểm tra xem ảnh mới có đè lên bất kỳ ảnh nào đã có không,
-                         // nếu có, thử tạo vị trí mới (tối đa 10 lần)
-                         while (
-                              attempt < 10 &&
-                              fallingImages.some(existing =>
-                                   !(
-                                        item.x + item.width + pad < existing.x ||
-                                        item.x > existing.x + existing.width + pad ||
-                                        item.y + item.height + pad < existing.y ||
-                                        item.y > existing.y + existing.height + pad
-                                   )
-                              )
-                         ) {
-                              item.x = random(0, cw);
-                              item.y = random(0, ch);
-                              attempt++;
-                         }
-                         return item;
-                    });
-                    return prevPush.apply(this, items);
-               }
-               return this.length;
-          };
-     }, 0);
-     // Giảm tần suất thêm ảnh bằng cách ghi đè phương thức push của mảng fallingImages
-    
-     // Preload images and create falling image objects for each loaded image
-     imageUrls.forEach(url => {
-           const img = new Image();
-           img.src = url;
-           img.onload = () => {
-                 for (let i = 0; i < imagesCount; i++) {
-                       fallingImages.push({
-                              img: img,
-                              x: random(0, cw),
-                              y: random(0, ch), 
-                              speed: random(1, 1), // tốc độ rơi
-                              width: random(100, 150), 
-                              height: random(100, 200),
-                              swing: random(0.5, 2), // để tạo hiệu ứng lắc nhẹ
-                              opacity: random(0.5, 1),
-                              swingPhase: random(0, Math.PI * 2)
-                       });
-                 }
-           };
-     });
 
-     function animateFallingImages(){
-           ctx.clearRect(0, 0, cw, ch);
-           fallingImages.forEach(item => {
-                 item.swingPhase += 0.02;
-                 const offsetX = Math.sin(item.swingPhase) * item.swing;
-                 ctx.drawImage(item.img, item.x + offsetX, item.y, item.width, item.height);
-                 item.y += item.speed;
-                 if(item.y > ch){
-                       item.y = -item.height;
-                       item.x = random(0, cw);
-                 }
-           });
-           requestAnimationFrame(animateFallingImages);
+     // Animate falling images with a gentle swing effect
+     function animateImages() {
+          const viewportWidth = window.innerWidth;
+          const viewportHeight = window.innerHeight;
+          images.forEach(obj => {
+               obj.swingPhase += 0.03;
+               const offsetX = Math.sin(obj.swingPhase) * obj.swing;
+               obj.y += obj.speed;
+               if (obj.y > viewportHeight) {
+                    obj.y = -50;
+                    obj.x = Math.random() * viewportWidth;
+                    // Optionally update image source for variation
+                    obj.el.src = imageSources[Math.floor(Math.random() * imageSources.length)];
+               }
+               obj.el.style.top = obj.y + 'px';
+               obj.el.style.left = (obj.x + offsetX) + 'px';
+          });
+          requestAnimationFrame(animateImages);
      }
-     animateFallingImages();
+     animateImages();
 })();
 </script>
-</script>
-<canvas id="hearts"></canvas>
-
 <script>
 (() => {
   const canvas = document.getElementById('hearts');
@@ -310,7 +184,7 @@
       x: random(0, width),
       y: random(0, height),
       size: random(10, 25),
-      speed: random(1, 3), //
+      speed: random(1, 3),
       opacity: random(0.3, 0.9),
       swing: random(0.5, 2),  // để tạo hiệu ứng lắc nhẹ trái tim theo chiều ngang
       swingPhase: random(0, Math.PI * 2)
@@ -347,7 +221,7 @@
         h.x = random(0, width);
         h.opacity = random(0.3, 0.9);
         h.size = random(10, 25);
-        h.speed = random(1, 3); //
+        h.speed = random(1, 3);
         h.swing = random(0.5, 2);
         h.swingPhase = random(0, Math.PI * 2);
       }
