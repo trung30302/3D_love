@@ -1,0 +1,638 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Dancing Script', cursive;
+    background: linear-gradient(45deg, #ff6b6b, #ee5a24, #ff9ff3, #54a0ff);
+    background-size: 400% 400%;
+    animation: gradientShift 8s ease infinite;
+    overflow-x: hidden;
+    perspective: 1000px;
+    touch-action: manipulation; /* Cải thiện trải nghiệm chạm */
+}
+
+/* Chỉ hiển thị custom cursor trên desktop */
+@media (hover: hover) and (pointer: fine) {
+    body {
+        cursor: none;
+    }
+    
+    .custom-cursor {
+        position: fixed;
+        width: 20px;
+        height: 20px;
+        background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, transparent 70%);
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 9999;
+        transition: transform 0.1s ease;
+    }
+}
+
+@media (hover: none) or (pointer: coarse) {
+    .custom-cursor {
+        display: none;
+    }
+}
+
+@keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* Hiệu ứng loading */
+.loading {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    transition: opacity 1s ease;
+}
+
+.loading.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.loading-heart {
+    font-size: 4rem;
+    color: white;
+    animation: loadingPulse 1s ease-in-out infinite;
+}
+
+@keyframes loadingPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+}
+
+/* Màn hình hộp quà */
+.gift-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 9998;
+    transition: all 1.5s ease;
+    padding: 1rem;
+}
+
+.gift-screen.hidden {
+    opacity: 0;
+    transform: scale(0.8);
+    pointer-events: none;
+}
+
+.gift-title {
+    font-family: 'Great Vibes', cursive;
+    font-size: clamp(2rem, 5vw, 3rem); /* Responsive font size */
+    color: white;
+    margin-bottom: 2rem;
+    text-shadow: 0 0 20px rgba(255,255,255,0.5);
+    animation: titleSparkle 2s ease-in-out infinite;
+    text-align: center;
+}
+
+@keyframes titleSparkle {
+    0%, 100% { text-shadow: 0 0 20px rgba(255,255,255,0.5); }
+    50% { text-shadow: 0 0 30px rgba(255,255,255,0.8), 0 0 40px rgba(255,255,255,0.6); }
+}
+
+/* Hộp quà 3D */
+.gift-box {
+    position: relative;
+    width: clamp(150px, 40vw, 200px); /* Responsive size */
+    height: clamp(150px, 40vw, 200px); /* Responsive size */
+    transform-style: preserve-3d;
+    animation: giftFloat 3s ease-in-out infinite;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    will-change: transform; /* Cải thiện hiệu suất animation */
+}
+
+.gift-box:hover, .gift-box:active {
+    transform: scale(1.1) rotateY(15deg);
+}
+
+@keyframes giftFloat {
+    0%, 100% { transform: translateY(0) rotateY(0deg); }
+    50% { transform: translateY(-20px) rotateY(180deg); }
+}
+
+.gift-box-face {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+    border: 5px solid #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: clamp(3rem, 8vw, 4rem); /* Responsive font size */
+    backface-visibility: hidden; /* Cải thiện hiệu suất 3D */
+}
+
+.gift-box-front { transform: translateZ(calc(clamp(150px, 40vw, 200px) / 2)); }
+.gift-box-back { transform: translateZ(calc(-1 * clamp(150px, 40vw, 200px) / 2)) rotateY(180deg); }
+.gift-box-right { transform: rotateY(90deg) translateZ(calc(clamp(150px, 40vw, 200px) / 2)); }
+.gift-box-left { transform: rotateY(-90deg) translateZ(calc(clamp(150px, 40vw, 200px) / 2)); }
+.gift-box-top { transform: rotateX(90deg) translateZ(calc(clamp(150px, 40vw, 200px) / 2)); }
+.gift-box-bottom { transform: rotateX(-90deg) translateZ(calc(clamp(150px, 40vw, 200px) / 2)); }
+
+/* Nơ hộp quà */
+.gift-ribbon {
+    position: absolute;
+    top: -10px;
+    left: calc(50% - 15px);
+    width: 30px;
+    height: calc(100% + 20px);
+    background: gold;
+    z-index: 10;
+}
+
+.gift-ribbon-h {
+    position: absolute;
+    top: calc(50% - 15px);
+    left: -10px;
+    width: calc(100% + 20px);
+    height: 30px;
+    background: gold;
+    z-index: 10;
+}
+
+.gift-bow {
+    position: absolute;
+    top: calc(50% - 15px);
+    left: calc(50% - 15px);
+    width: 30px;
+    height: 30px;
+    background: #ffd700;
+    border-radius: 50%;
+    z-index: 11;
+    animation: bowShine 2s ease-in-out infinite;
+}
+
+@keyframes bowShine {
+    0%, 100% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.8); }
+    50% { box-shadow: 0 0 40px rgba(255, 215, 0, 1); }
+}
+
+.gift-instruction {
+    color: white;
+    font-size: clamp(1.2rem, 4vw, 1.5rem); /* Responsive font size */
+    margin-top: 3rem;
+    text-align: center;
+    animation: instructionBlink 2s ease-in-out infinite;
+}
+
+@keyframes instructionBlink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+/* Container chính với hiệu ứng 3D */
+.main-container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    transform-style: preserve-3d;
+    opacity: 0;
+    transform: scale(0.8);
+    transition: all 2s ease;
+    padding: 1rem;
+    will-change: transform, opacity; /* Cải thiện hiệu suất animation */
+}
+
+.main-container.visible {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* Tiêu đề chính */
+.main-title {
+    font-family: 'Pacifico', cursive;
+    font-size: clamp(2.5rem, 8vw, 4rem); /* Responsive font size */
+    color: #fff;
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
+    margin-bottom: 2rem;
+    animation: titleFloat 3s ease-in-out infinite;
+    transform: translateZ(50px);
+    text-align: center;
+    will-change: transform; /* Cải thiện hiệu suất animation */
+}
+
+@keyframes titleFloat {
+    0%, 100% { transform: translateY(0) translateZ(50px) rotateX(0deg); }
+    50% { transform: translateY(-10px) translateZ(60px) rotateX(5deg); }
+}
+
+/* Container cho slideshow ảnh */
+.photo-container {
+    width: clamp(280px, 90vw, 400px); /* Responsive width */
+    height: clamp(210px, 67.5vw, 300px); /* Maintain aspect ratio */
+    position: relative;
+    margin: 2rem 0;
+    transform-style: preserve-3d;
+    transform: translateZ(30px);
+}
+
+.photo-frame {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    border-radius: 20px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+    opacity: 0;
+    transform: rotateY(90deg) translateZ(-50px);
+    transition: all 1s ease-in-out;
+    will-change: transform, opacity; /* Cải thiện hiệu suất animation */
+}
+
+.photo-frame.active {
+    opacity: 1;
+    transform: rotateY(0deg) translateZ(0px);
+}
+
+.photo-frame img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 20px;
+}
+
+/* Placeholder cho ảnh khi chưa có ảnh thật */
+.photo-placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, #ff9a9e, #fecfef);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: clamp(1.2rem, 4vw, 1.5rem); /* Responsive font size */
+    color: #fff;
+    text-align: center;
+    padding: 1rem;
+}
+
+/* Lời chúc */
+.message-container {
+    max-width: clamp(280px, 90vw, 600px); /* Responsive width */
+    background: rgba(255, 255, 255, 0.95);
+    padding: 2rem;
+    border-radius: 20px;
+    margin: 2rem 1rem;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    transform: translateZ(30px);
+    animation: messageGlow 4s ease-in-out infinite;
+    will-change: box-shadow; /* Cải thiện hiệu suất animation */
+}
+
+@keyframes messageGlow {
+    0%, 100% { box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2); }
+    50% { box-shadow: 0 20px 60px rgba(255, 105, 180, 0.4); }
+}
+
+.message-text {
+    font-size: clamp(1.4rem, 5vw, 1.8rem); /* Responsive font size */
+    line-height: 1.6;
+    color: #333;
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.signature {
+    font-size: clamp(1.2rem, 4vw, 1.5rem); /* Responsive font size */
+    color: #ff6b6b;
+    text-align: right;
+    font-weight: bold;
+}
+
+/* Trái tim bay */
+.heart {
+    position: absolute;
+    color: #ff6b6b;
+    font-size: clamp(1.5rem, 5vw, 2rem); /* Responsive font size */
+    animation: heartFloat 6s ease-in-out infinite;
+    pointer-events: none;
+    will-change: transform, opacity; /* Cải thiện hiệu suất animation */
+}
+
+@keyframes heartFloat {
+    0% {
+        transform: translateY(100vh) translateZ(0px) rotateY(0deg);
+        opacity: 0;
+    }
+    10% {
+        opacity: 1;
+    }
+    90% {
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-100px) translateZ(100px) rotateY(360deg);
+        opacity: 0;
+    }
+}
+
+/* Particles bay lơ lửng */
+.particle {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 50%;
+    pointer-events: none;
+    animation: particleFloat 8s linear infinite;
+    will-change: transform, opacity; /* Cải thiện hiệu suất animation */
+}
+
+@keyframes particleFloat {
+    0% {
+        transform: translateY(100vh) translateX(0) translateZ(0);
+        opacity: 0;
+    }
+    10% {
+        opacity: 1;
+    }
+    90% {
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-100px) translateX(200px) translateZ(50px);
+        opacity: 0;
+    }
+}
+
+/* Hiệu ứng click chuột/chạm */
+.click-effect {
+    position: absolute;
+    pointer-events: none;
+    z-index: 1000;
+    animation: clickExpand 1s ease-out forwards;
+    will-change: transform, opacity; /* Cải thiện hiệu suất animation */
+}
+
+@keyframes clickExpand {
+    0% {
+        transform: scale(0) rotate(0deg);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(3) rotate(360deg);
+        opacity: 0;
+    }
+}
+
+.click-text {
+    position: absolute;
+    pointer-events: none;
+    font-size: clamp(1.2rem, 4vw, 1.5rem); /* Responsive font size */
+    color: white;
+    text-shadow: 0 0 10px rgba(255,255,255,0.8);
+    z-index: 1000;
+    animation: textFadeUp 2s ease-out forwards;
+    will-change: transform, opacity; /* Cải thiện hiệu suất animation */
+}
+
+@keyframes textFadeUp {
+    0% {
+        transform: translateY(0) scale(0);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-100px) scale(1.2);
+        opacity: 0;
+    }
+}
+
+/* Nút điều khiển */
+.controls {
+    position: fixed;
+    bottom: 1rem;
+    right: 1rem;
+    z-index: 1000;
+    display: none;
+}
+
+.controls.visible {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 0.5rem;
+}
+
+.control-btn {
+    background: rgba(255, 255, 255, 0.9);
+    border: none;
+    width: clamp(50px, 15vw, 60px); /* Responsive size */
+    height: clamp(50px, 15vw, 60px); /* Responsive size */
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: clamp(1.5rem, 5vw, 1.8rem); /* Responsive font size */
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    -webkit-tap-highlight-color: transparent; /* Loại bỏ highlight khi chạm trên mobile */
+}
+
+.control-btn:hover, .control-btn:active {
+    transform: scale(1.1) translateZ(10px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+}
+
+/* Hiệu ứng mở hộp quà */
+.gift-opening {
+    animation: giftOpen 2s ease-in-out forwards;
+    will-change: transform, opacity; /* Cải thiện hiệu suất animation */
+}
+
+@keyframes giftOpen {
+    0% {
+        transform: scale(1) rotateY(0deg);
+    }
+    50% {
+        transform: scale(1.5) rotateY(180deg);
+    }
+    100% {
+        transform: scale(0) rotateY(360deg);
+        opacity: 0;
+    }
+}
+
+/* Confetti khi mở hộp */
+.confetti {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background: #ff6b6b;
+    animation: confettiFall 3s ease-out forwards;
+    will-change: transform, opacity; /* Cải thiện hiệu suất animation */
+}
+
+@keyframes confettiFall {
+    0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(100vh) rotate(720deg);
+        opacity: 0;
+    }
+}
+
+/* Tối ưu cho màn hình nhỏ */
+@media (max-width: 480px) {
+    .controls {
+        bottom: 0.5rem;
+        right: 0.5rem;
+    }
+    
+    .control-btn {
+        margin: 0.25rem;
+    }
+    
+    .message-container {
+        padding: 1.5rem;
+    }
+    
+    .gift-instruction {
+        margin-top: 2rem;
+    }
+    
+    /* Giảm số lượng hiệu ứng trên mobile để tăng hiệu suất */
+    @keyframes titleFloat {
+        0%, 100% { transform: translateY(0) translateZ(30px); }
+        50% { transform: translateY(-5px) translateZ(35px); }
+    }
+}
+
+/* Tối ưu cho thiết bị có màn hình thấp */
+@media (max-height: 600px) {
+    .gift-title {
+        margin-bottom: 1rem;
+    }
+    
+    .photo-container {
+        margin: 1rem 0;
+    }
+    
+    .message-container {
+        margin: 1rem;
+        padding: 1rem;
+    }
+    
+    .main-title {
+        margin-bottom: 1rem;
+    }
+}
+
+/* Tối ưu cho thiết bị có màn hình rất nhỏ */
+@media (max-width: 320px) {
+    .gift-box {
+        width: 120px;
+        height: 120px;
+    }
+    
+    .gift-box-face {
+        width: 120px;
+        height: 120px;
+        font-size: 2.5rem;
+    }
+    
+    .photo-container {
+        width: 250px;
+        height: 187.5px;
+    }
+}
+
+/* Tối ưu cho thiết bị có màn hình rộng */
+@media (min-width: 1200px) {
+    .main-container {
+        padding: 2rem;
+    }
+    
+    .message-container {
+        padding: 3rem;
+    }
+}
+
+/* Tối ưu cho chế độ ngang trên mobile */
+@media (max-height: 500px) and (orientation: landscape) {
+    .gift-screen {
+        flex-direction: row;
+        justify-content: space-around;
+        padding: 1rem 2rem;
+    }
+    
+    .gift-title {
+        margin-bottom: 0;
+        margin-right: 2rem;
+    }
+    
+    .gift-instruction {
+        margin-top: 0;
+        margin-left: 2rem;
+    }
+    
+    .main-container {
+        padding: 0.5rem;
+    }
+    
+    .photo-container {
+        margin: 1rem 0;
+    }
+    
+    .message-container {
+        margin: 1rem;
+        padding: 1rem;
+    }
+}
+
+/* Tối ưu cho thiết bị có độ phân giải cao */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    .message-container {
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    }
+}
+
+/* Tối ưu cho chế độ tiết kiệm pin/giảm chuyển động */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+    
+    .gift-box, .main-title, .heart, .particle, .confetti {
+        animation: none !important;
+    }
+    
+    .gift-box {
+        transform: none !important;
+    }
+    
+    .main-title {
+        transform: translateZ(0) !important;
+    }
+}
