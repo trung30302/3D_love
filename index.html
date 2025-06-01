@@ -33,6 +33,8 @@
           music.play().catch(() => {
                console.log("Playback prevented. Waiting for user interaction...");
           });
+          //tự động phát nhạc 
+          
           document.removeEventListener("click", playMusic);
           document.removeEventListener("keydown", playMusic);
      }
@@ -152,7 +154,7 @@
      ];
 
      const images = [];
-     const count = 5; //số lượng hình ảnh rơi
+     const count = 3; //số lượng hình ảnh rơi
      const viewportWidth = window.innerWidth;
      
      // Create image elements with random properties
