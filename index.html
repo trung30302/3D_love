@@ -26,28 +26,51 @@
 <canvas id="hearts"></canvas>
 <div id="fallingTexts"></div>
 <script>
-window.addEventListener('load', () => {
-     // Adjust mousemove to produce a stronger 3D effect
-     document.addEventListener('mousemove', (e) => {
-          const xNorm = e.clientX / window.innerWidth - 0.5;
-          const yNorm = e.clientY / window.innerHeight - 0.5;
-          const rotateY = xNorm * 40; // doubled rotation for a stronger effect
-          const rotateX = -yNorm * 40;
-          // Increase perspective and add slight scaling for depth
-          document.body.style.transform = `perspective(1500px) rotateY(${rotateY}deg) rotateX(${rotateX}deg) scale(1.05)`;
-     });
+(() => {
+     let effectActive = false;
 
-     document.addEventListener('mouseleave', () => {
-          // Reset transformation when mouse leaves window
+     function handlePointerMove(e) {
+          if (!effectActive) return;
+          let clientX, clientY;
+          if (e.touches) {
+               clientX = e.touches[0].clientX;
+               clientY = e.touches[0].clientY;
+          } else {
+               clientX = e.clientX;
+               clientY = e.clientY;
+          }
+          const xNorm = clientX / window.innerWidth - 0.5;
+          const yNorm = clientY / window.innerHeight - 0.5;
+          const rotateY = xNorm * 40;
+          const rotateX = -yNorm * 40;
+          document.body.style.transform = `perspective(1500px) rotateY(${rotateY}deg) rotateX(${rotateX}deg) scale(1.05)`;
+     }
+
+     function resetTransform() {
           document.body.style.transform = 'perspective(1500px) rotateY(0deg) rotateX(0deg) scale(1)';
+     }
+
+     document.addEventListener('mousedown', () => effectActive = true);
+     document.addEventListener('mouseup', () => {
+          effectActive = false;
+          resetTransform();
      });
-});
+     document.addEventListener('mousemove', handlePointerMove);
+
+     document.addEventListener('touchstart', () => effectActive = true);
+     document.addEventListener('touchend', () => {
+          effectActive = false;
+          resetTransform();
+     });
+     document.addEventListener('touchmove', handlePointerMove);
+})();
 </script>
+
 
 <script>
 (() => {
      const container = document.getElementById('fallingTexts');
-     const texts = ["Chúc em bé 01/06!!", "Vui vẻ và ý nghĩa", "Love", "Yêu em bé", "💖"];
+     const texts = ["Chúc em bé 01/06!!", "Vui vẻ và ý nghĩa", "Love", "Yêu em bé", "💖", "💖LOVE💖"];
      const textElements = [];
      const count = 20;
      const viewportWidth = window.innerWidth;
@@ -90,6 +113,7 @@ window.addEventListener('load', () => {
      animateTexts();
 })();
 </script>
+
 <script>
 (() => {
      // Create a container for falling images
@@ -106,40 +130,43 @@ window.addEventListener('load', () => {
      // List of sample image URLs
      const imageSources = [
         "images/1.jpg",
-        "images/2.jpg",
-            "images/3.jpg",
+            "images/2.jpg",
+               "images/3.jpg",
+               "images/4.jpg",
+               "images/5.jpg",
+       
      ];
 
      const images = [];
-     const count = 15;
+     const count = 5; //số lượng hình ảnh rơi
      const viewportWidth = window.innerWidth;
      
      // Create image elements with random properties
      for (let i = 0; i < count; i++) {
           const img = document.createElement('img');
           img.src = imageSources[Math.floor(Math.random() * imageSources.length)];
-          img.style.position = 'fixed';
-          img.style.width = (Math.random() * 30 + 50) + 'px';
-          img.style.height = 'auto';
+          img.style.position = 'fixed'; 
+          img.style.width = (Math.random() * 50 + 80) + 'px';
+          img.style.height = 'auto'; 
           img.style.left = Math.random() * viewportWidth + 'px';
-          img.style.top = -50 + 'px';
+          img.style.top = -50 + 'px'; 
           imageContainer.appendChild(img);
           images.push({
                el: img,
                x: parseFloat(img.style.left),
                y: -50,
                speed: Math.random() * 2 + 1,
-               swing: Math.random() * 10 + 5,
-               swingPhase: Math.random() * Math.PI * 2
+               swing: Math.random() * 10 + 5, 
+               swingPhase: Math.random() * Math.PI * 2 
           });
      }
-
+     
      // Animate falling images with a gentle swing effect
      function animateImages() {
           const viewportWidth = window.innerWidth;
           const viewportHeight = window.innerHeight;
           images.forEach(obj => {
-               obj.swingPhase += 0.03;
+               obj.swingPhase += 0.03; 
                const offsetX = Math.sin(obj.swingPhase) * obj.swing;
                obj.y += obj.speed;
                if (obj.y > viewportHeight) {
