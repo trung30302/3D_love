@@ -106,7 +106,7 @@
                el: el,
                x: parseFloat(el.style.left),
                y: -50,
-               speed: Math.random() * 1+1, // tốc độ rơi
+               speed: Math.random() * 2+1, // tốc độ rơi
                swing: Math.random() * 8 + 5, // độ lắc ngang
                swingPhase: Math.random() * Math.PI * 2
           });
@@ -155,7 +155,7 @@
      ];
 
      const images = []; 
-     const count = 5; //số lượng hình ảnh rơi
+     const count = 3; //số lượng hình ảnh rơi
      const viewportWidth = window.innerWidth; 
      
      // Create image elements with random properties
@@ -171,9 +171,9 @@
           images.push({
                el: img,
                x: parseFloat(img.style.left),
-               y: -50,
-               speed: Math.random() * 0+1, // tốc độ rơi
-               swing: Math.random() * 5 + 5, // độ lắc ngang
+               y: -30, // vị trí ban đầu
+               speed: Math.random() * 1+1, // tốc độ rơi
+               swing: Math.random() * 8 + 5, // độ lắc ngang
                swingPhase: Math.random() * Math.PI * 2 
           });
      }
