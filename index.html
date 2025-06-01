@@ -25,6 +25,20 @@
 
 <canvas id="hearts"></canvas>
 <div id="fallingTexts"></div>
+<audio id="backgroundMusic" src="musics/1.mp3" loop></audio>
+<script>
+     // Start the music after a user interaction to satisfy autoplay policies
+     const music = document.getElementById("backgroundMusic");
+     function playMusic() {
+          music.play().catch(() => {
+               console.log("Playback prevented. Waiting for user interaction...");
+          });
+          document.removeEventListener("click", playMusic);
+          document.removeEventListener("keydown", playMusic);
+     }
+     document.addEventListener("click", playMusic);
+     document.addEventListener("keydown", playMusic);
+</script>
 <script>
 (() => {
      let effectActive = false;
