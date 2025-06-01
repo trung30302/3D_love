@@ -88,7 +88,8 @@
      const container = document.getElementById('fallingTexts');
      const texts = ["Chúc em bé 01/06!!", "Vui vẻ và ý nghĩa", "Love", "Yêu em bé", "💖", "💖LOVE💖"];
      const textElements = [];
-     const count = 20;
+     const count = 15; //số lượng chữ rơi
+     container.style.position = 'fixed';
      const viewportWidth = window.innerWidth;
      for (let i = 0; i < count; i++) {
           const el = document.createElement('div');
@@ -105,8 +106,8 @@
                el: el,
                x: parseFloat(el.style.left),
                y: -50,
-               speed: Math.random() * 2 + 1,
-               swing: Math.random() * 10 + 5,
+               speed: Math.random() * 1+1, // tốc độ rơi
+               swing: Math.random() * 8 + 5, // độ lắc ngang
                swingPhase: Math.random() * Math.PI * 2
           });
      }
@@ -154,7 +155,7 @@
      ];
 
      const images = [];
-     const count = 3; //số lượng hình ảnh rơi
+     const count = 5; //số lượng hình ảnh rơi
      const viewportWidth = window.innerWidth;
      
      // Create image elements with random properties
@@ -171,8 +172,8 @@
                el: img,
                x: parseFloat(img.style.left),
                y: -50,
-               speed: Math.random() * 2 + 1,
-               swing: Math.random() * 10 + 5, 
+               speed: Math.random() * 1+1, // tốc độ rơi
+               swing: Math.random() * 5 + 5, // độ lắc ngang
                swingPhase: Math.random() * Math.PI * 2 
           });
      }
